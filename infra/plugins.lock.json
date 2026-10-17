@@ -303,5 +303,10 @@
     "shortName": "workflow-support",
     "version": "1015.v785e5a_b_b_8b_22",
     "active": true
+  },
+  {
+    "shortName": "locale",
+    "version": "641.v84f22d75fd8b_",
+    "active": true
   }
 ]
