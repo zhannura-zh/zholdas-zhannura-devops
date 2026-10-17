@@ -53,5 +53,30 @@ class HTTPTests(unittest.TestCase):
     def test_missing_route(self):
         with self.assertRaises(HTTPError) as error: urlopen(self.base+"/missing")
         self.assertEqual(error.exception.code,404)
+        error.exception.close()
+
+
+class TerminationTests(unittest.TestCase):
+    def test_sigterm_exits_cleanly_and_page_contains_footer(self):
+        import socket, subprocess, signal, time
+        with socket.socket() as sock:
+            sock.bind(("127.0.0.1",0)); port=sock.getsockname()[1]
+        env={**os.environ,"APP_PORT":str(port)}
+        process=subprocess.Popen([__import__('sys').executable,"-u","-m","app.main"],env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+        try:
+            for attempt in range(60):
+                try:
+                    with urlopen(f"http://127.0.0.1:{port}/",timeout=1) as response:
+                        self.assertIn("Continuous delivery lab",response.read().decode())
+                    break
+                except OSError: time.sleep(0.1)
+            else: self.fail("Server did not become ready")
+            process.send_signal(signal.SIGTERM)
+            output,_=process.communicate(timeout=5)
+            self.assertEqual(process.returncode,0,output)
+            self.assertIn("Shutdown complete",output)
+        finally:
+            if process.poll() is None: process.kill(); process.communicate()
 
 if __name__ == "__main__": unittest.main()
+

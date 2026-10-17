@@ -51,7 +51,7 @@ class Handler(BaseHTTPRequestHandler):
                     '<h1>DevOps Student Application</h1><p>Linux → Git → GitHub → Docker → Jenkins</p>'
                     f'<dl>{fields}</dl><p>Application is running successfully!</p>'
                     '<p><a href="/student">Student JSON</a> · <a href="/health">Health check</a></p>'
-                    '</html>')
+                    '<footer>Continuous delivery lab | Zhannura Zholdas | IT2-2306</footer></html>')
             self.respond(200, page.encode(), "text/html; charset=utf-8")
         else:
             self.respond(404, b"Not found\n", "text/plain; charset=utf-8")
@@ -67,10 +67,12 @@ def main():
     server = ThreadingHTTPServer(("0.0.0.0", read_port()), Handler)
     print("Student:", json.dumps(student_info()), flush=True)
     print("Listening on", server.server_address, flush=True)
+    signal.signal(signal.SIGTERM, lambda signum, frame: threading.Thread(target=server.shutdown, daemon=True).start())
     try:
         server.serve_forever()
     finally:
         server.server_close()
+        print("Shutdown complete", flush=True)
 
 if __name__ == "__main__":
     main()
