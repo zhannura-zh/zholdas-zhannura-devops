@@ -1,0 +1,5 @@
+Name: Zhannura
+Surname: Zholdas
+Group: IT2-2306
+Student ID: 37742
+Course: DevOps
