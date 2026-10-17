@@ -1,0 +1,10 @@
+.git
+.env
+logs/
+backup/
+tests/
+docs/
+infra/
+**/__pycache__/
+*.log
+private.txt

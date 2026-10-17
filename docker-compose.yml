@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    image: zholdas-zhannura-devops
+    container_name: zholdas-zhannura-container
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      STUDENT_NAME: ${STUDENT_NAME:-Zhannura}
+      STUDENT_SURNAME: ${STUDENT_SURNAME:-Zholdas}
+      STUDENT_GROUP: ${STUDENT_GROUP:-IT2-2306}
+      STUDENT_ID: ${STUDENT_ID:-37742}
+      APP_PORT: "8000"
